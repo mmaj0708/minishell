@@ -62,13 +62,13 @@ int			pass_ve(char *arg, int i)
 
 void		replace_arg_cond(t_quote *q, int *i, char *arg, char **proper_arg)
 {
-	if (arg[i[0]] == '\\' && (is_even(q->singl) == 0 || is_even(q->doubl) == 0))
-	{
-		proper_arg[0] = ft_charjoin(proper_arg[0], ' ');
-		i[0]++;
-	}
-	else if (arg[i[0]] == '\\' && (is_even(q->singl) == 0 ||
-			(is_even(q->doubl) == 0 && ft_isalnum(arg[i[0] + 1]) == TRUE)))
+	// if (arg[i[0]] == '\\' && (is_even(q->singl) == 0 || is_even(q->doubl) == 0))
+	// {
+	// 	proper_arg[0] = ft_charjoin(proper_arg[0], arg[i[0]]);
+	// 	i[0]++;
+	// }
+	if (arg[i[0]] == '\\' && (is_even(q->singl) == 0 ||
+			(is_even(q->doubl) == 0 && arg[i[0] + 1] != '\"')))
 		proper_arg[0] = ft_charjoin(proper_arg[0], arg[i[0]]);
 	else if (arg[i[0]] == '\\')
 		proper_arg[0] = ft_charjoin(proper_arg[0], arg[++i[0]]);
@@ -90,6 +90,7 @@ char		*replace_arg(char *arg)
 	int		i;
 	t_quote	q;
 	char	*proper_arg;
+	char	*save;
 
 	i = -1;
 	q.doubl = 0;
@@ -99,14 +100,13 @@ char		*replace_arg(char *arg)
 	proper_arg[0] = '\0';
 	if (arg[0] == '~' && (arg[1] == '\0' || arg[1] == '/'))
 	{
-		free(proper_arg);
+		save = proper_arg;
 		proper_arg = ft_strjoin(proper_arg, ft_search("HOME"));
+		free(save);
 		i++;
 	}
 	while (arg[++i])
-	{
 		replace_arg_cond(&q, &i, arg, &proper_arg);
-	}
 	return (proper_arg);
 }
 

@@ -19,8 +19,8 @@ void	quote_condition(t_quote *q, int *i, char **quoted_line, char *line)
 		q->doubl++;
 		quoted_line[0][i[0]++] = '0';
 	}
-	else if (line[i[0]] == '\'' &&
-			q->doubl % 2 == 0 && line[i[0] - 1] != '\\')
+	else if ((line[i[0]] == '\'' && q->doubl % 2 == 0 && line[i[0] - 1] != '\\')
+	|| (line[i[0]] == '\'' && q->doubl % 2 == 0 && q->singl % 2 == 1))
 	{
 		q->singl++;
 		quoted_line[0][i[0]++] = '0';
@@ -51,7 +51,7 @@ int		count_quote(char *line, char **quoted_line)
 		quote_condition(&q, &i, quoted_line, line);
 	}
 	quoted_line[0][i] = '\0';
-	if (is_char(line[i - 1], "\\|><") == TRUE)
+	if (is_char(line[i - 1], "\\") == TRUE)
 		return (FAILURE);
 	if (q.singl % 2 == 1 || q.doubl % 2 == 1)
 		return (FAILURE);

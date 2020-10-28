@@ -6,7 +6,7 @@
 /*   By: mmaj <mmaj@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 14:46:52 by user42            #+#    #+#             */
-/*   Updated: 2020/10/23 10:08:37 by mmaj             ###   ########.fr       */
+/*   Updated: 2020/10/15 14:16:43 by mmaj             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,24 @@ int			check_exceptions(char *line, int type, int exit)
 	command_tab = ft_split(line, ';');
 	while (command_tab[++i])
 	{
-		if (type == 0 && is_redirect_sup(line) == TRUE)
+		if (is_double_redirect(command_tab[i]) == TRUE)
+		{
+			if ((exit = double_redirect(command_tab[i])) == FAILURE)
+				break ;
+		}		
+		if (type == 0 && is_redirect_sup(command_tab[i]) == TRUE)
 		{
 			if ((exit = redirect_sup(command_tab[i])) == FAILURE)
 				break ;
 		}
-		else if (is_pipe(line) == TRUE)
+		else if (is_redirect_inf(command_tab[i]) == TRUE)
 		{
-			if ((exit = pipeline(command_tab[i], command_tab)) == FAILURE)
+			if ((exit = redirect_inf(command_tab[i])) == FAILURE)
+				break ;
+		}
+		else if (is_char_no_quot(command_tab[i], '|') == TRUE)
+		{
+			if ((exit = pipeline(command_tab[i])) == FAILURE)
 				break ;
 		}
 		else
@@ -95,6 +105,7 @@ int			main(int ac, char **av, char **envp)
 	if (ac == 1)
 	{
 		g_quit = 0;
+		g_pipe = 0;
 		signal(SIGQUIT, ctrlc_handler);
 		g_env = ft_tabstrdup(envp);
 		main_loop();

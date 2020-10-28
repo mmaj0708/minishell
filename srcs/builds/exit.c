@@ -12,12 +12,20 @@
 
 #include "minishell.h"
 
+void	exit_error(char **arg_tab)
+{
+	ft_putstr_fd("msh: ", 2);
+	ft_putstr_fd(arg_tab[1], 2);
+	ft_putstr_fd(" : numeric argument only\n", 2);
+}
+
 int		ft_exit(char **arg_tab)
 {
 	int		i;
 
 	i = -1;
-	ft_putstr("exit\n");
+	if (g_pipe == 0)
+		ft_putstr("exit\n");
 	if (arg_tab[1] != 0 && arg_tab[2] != 0)
 	{
 		ft_putstr_fd("msh: exit: too many arguments\n", 2);
@@ -25,13 +33,12 @@ int		ft_exit(char **arg_tab)
 		return (-1);
 	}
 	while (arg_tab[1] && arg_tab[1][++i])
-		if (ft_isdigit(arg_tab[1][i]) == FALSE)
-			break;
+		if (ft_isdigit(arg_tab[1][i]) == FALSE &&
+		arg_tab[1][i] != '-' && arg_tab[1][i] != '+')
+			break ;
 	if (arg_tab[1] && arg_tab[1][i])
 	{
-		ft_putstr_fd("msh: ", 2);
-		ft_putstr_fd(arg_tab[1], 2);
-		ft_putstr_fd(" : numeric argument only\n", 2);
+		exit_error(arg_tab);
 		g_quit = 1;
 		return (-1);
 	}

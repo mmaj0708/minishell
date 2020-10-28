@@ -6,7 +6,7 @@
 /*   By: mmaj <mmaj@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 15:11:51 by hcanon            #+#    #+#             */
-/*   Updated: 2020/10/23 10:05:02 by mmaj             ###   ########.fr       */
+/*   Updated: 2020/10/20 12:02:55 by mmaj             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ typedef	struct	s_pipe
 	pid_t	*child;
 }				t_pipe;
 
-
-// built-in functions
 int				ft_echo(char **arg_tab);
 int				ft_pwd(char *line, int type);
 int				ft_cd(char **arg_tab);
@@ -65,11 +63,8 @@ int				ft_env(char **arg_tab);
 int				ft_export(char **arg_tab, char ***env);
 int				ft_unset(char **arg_tab, char ***env);
 int				ft_exit(char **arg_tab);
-// pipes functions
 int				is_pipe(char *command);
-int				pipeline(char *command, char **command_tab);
-
-// other
+int				pipeline(char *command);
 void			print_strs(char **tabstr);
 void			free_tab(char **tab);
 void			print_env_var(char *line, int *i);
@@ -86,6 +81,8 @@ int				is_char(char c, char *strchar);
 int				is_export(char **env, char *var);
 int				ft_echo_print(char *line);
 int				is_even(int n);
+int				is_double_redirect(char *command);
+int				double_redirect(char *command);
 int				is_redirect_sup(char *command);
 int				redirect_sup(char *command);
 int				is_redirect_inf(char *command);
@@ -98,8 +95,11 @@ int				is_replace(char *arg);
 char			*ft_charjoin(char *str, char c);
 int				count_quote(char *line, char **quoted_line);
 void			bad_identifier(char *arg, char *var);
+int				is_equal(char *str);
+int				is_char_no_quot(char *command, char c);
 
 char			**g_env;
 int				g_quit;
+int				g_pipe;
 
 #endif

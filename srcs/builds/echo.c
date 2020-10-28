@@ -12,6 +12,21 @@
 
 #include "minishell.h"
 
+int		echo_option(char *str)
+{
+	int		i;
+
+	i = 1;
+	if (str[0] == '-')
+	{
+		while (str[i] == 'n')
+			i++;
+		if (str[i] == 0 && i >= 2)
+			return (TRUE);
+	}
+	return (FALSE);
+}
+
 int		ft_echo(char **tab)
 {
 	int		option;
@@ -19,7 +34,7 @@ int		ft_echo(char **tab)
 	option = 0;
 	if (tab[1] != 0)
 	{
-		while (strcmp(tab[option + 1], "-n") == 0)
+		while (echo_option(tab[option + 1]) == TRUE)
 			option++;
 		print_strs(tab + option + 1);
 	}

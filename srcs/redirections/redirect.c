@@ -47,7 +47,6 @@ int		threading(char **arg_tab, int *fd, int j)
 	{
 		if (dup2(fd[j], 1) != FAILURE)
 			check_exceptions(arg_tab[0], 1, 0);
-		free_redirect_sup(arg_tab, fd);
 		return (FAILURE);
 	}
 	else if (child < 0)
@@ -95,16 +94,31 @@ int		*initialize_fd(char ***arg_tab, int i, int j)
 	return (fd);
 }
 
-int		redirect_sup(char *line)
+char	*copy_string(char *str)
+{
+	char	*line;
+	int		i;
+
+	i = -1;
+	line = ft_strdup(" ");
+	while (str[++i])
+		line = ft_charjoin(line, str[i]);
+	return (line);
+}
+
+int		redirect_sup(char *str)
 {
 	char	**arg_tab;
 	int		j;
 	int		*fd;
 	int		i;
+	char	*line;
 
 	j = 0;
 	i = 1;
+	line = copy_string(str);
 	arg_tab = ft_split(line, '>');
+	free(line);
 	arg_tab = get_proper_arg(arg_tab);
 	if ((fd = initialize_fd(&arg_tab, 0, i - 1)) == NULL)
 	{
@@ -115,7 +129,7 @@ int		redirect_sup(char *line)
 	while (fd[j])
 		j++;
 	if (fd[0] == 0)
-		i = check_exceptions(arg_tab[0], 1, 0);
+		i = check_exceptions(str, 1, 0);
 	else
 		i = threading(arg_tab, fd, j - 1);
 	free_redirect_sup(arg_tab, fd);

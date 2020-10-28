@@ -58,6 +58,15 @@ int		is_good_var(char *var)
 	return (TRUE);
 }
 
+void	bad_identifier_unset(char *arg, char *var)
+{
+	ft_putstr_fd("msh : unset : \'", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd("\': not a valid identifier\n", 2);
+	free(var);
+	return ;
+}
+
 int		ft_unset(char **arg_tab, char ***env)
 {
 	int		j;
@@ -78,7 +87,7 @@ int		ft_unset(char **arg_tab, char ***env)
 		}
 		if (is_good_var(arg_tab[i]) == FALSE)
 		{
-			bad_identifier(arg_tab[i], NULL);
+			bad_identifier_unset(arg_tab[i], NULL);
 			g_quit = 1;
 			ret = 1;
 		}

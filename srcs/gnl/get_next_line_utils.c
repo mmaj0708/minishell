@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "minishell.h"
 
 int		lst_clear(t_str **list)
 {
@@ -123,6 +124,11 @@ int		fill_in(t_str **str, char *buffer, int fd)
 			elem->next = newline;
 		}
 		return (1);
+	}
+	if (bytes_read == 0 && buffer[0] == '\0')
+	{
+		ft_putstr_fd("ctrld detected : exit\n", 1);
+		exit(1);
 	}
 	return ((bytes_read < 0) ? -1 : 0);
 }

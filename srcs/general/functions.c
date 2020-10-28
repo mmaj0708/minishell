@@ -26,11 +26,13 @@ void		print_prompt(int error)
 {
 	if (error == 0)
 		ft_putstr(BRED);
-	else if (error == 1)
+	else if (error == 1 && g_pipe == 0)
 	{
 		ft_putstr(BBLUE);
 		g_quit = 0;
 	}
+	if (g_pipe == 1)
+		g_pipe = 0;
 	ft_pwd(NULL, 0);
 	ft_putstr(BGREEN);
 	ft_putstr_fd(" $> ", 1);

@@ -24,7 +24,8 @@ char	*ft_search(char *word)
 		while (g_env[i][j] == word[j])
 		{
 			j++;
-			if (g_env[i][j] == '=' && (is_char(word[j], "/") || word[j] == '\0'))
+			if (g_env[i][j] == '=' && (is_char(word[j], "/") ||
+				word[j] == '\0'))
 				return (g_env[i] + j + 1);
 		}
 		i++;
@@ -46,8 +47,11 @@ int		ft_env(char **tab)
 	}
 	while (g_env[++i])
 	{
-		ft_putstr_fd(g_env[i], 1);
-		ft_putchar_fd('\n', 1);
+		if (is_equal(g_env[i]) == TRUE)
+		{
+			ft_putstr_fd(g_env[i], 1);
+			ft_putchar_fd('\n', 1);
+		}
 	}
 	return (2);
 }

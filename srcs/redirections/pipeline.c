@@ -6,13 +6,13 @@
 /*   By: mmaj <mmaj@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 09:04:30 by mmaj              #+#    #+#             */
-/*   Updated: 2020/10/23 10:13:17 by mmaj             ###   ########.fr       */
+/*   Updated: 2020/10/22 15:12:47 by mmaj             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int		is_pipe(char *command)
+int		is_char_no_quot(char *command, char c)
 {
 	int		i;
 	char	*quoted_line;
@@ -22,7 +22,7 @@ int		is_pipe(char *command)
 	count_quote(command, &quoted_line);
 	while (command[i])
 	{
-		if (is_char(command[i], "|") == TRUE && quoted_line[i] == '0')
+		if (is_char(command[i], &c) == TRUE && quoted_line[i] == '0')
 		{
 			free(quoted_line);
 			return (TRUE);
@@ -100,14 +100,10 @@ void	connect_pipe(char **job_tab, t_pipe p, int i)
 	dup2(p.pipefd[i + i + 1], 1);
 	close_fd(p.pipefd, p.nb_pipe * 2);
 	find_job(job_tab[i]);
-	free(p.child);
-	free(p.pipefd);
-	free_tab(job_tab);
-	free_tab(g_env);
 	exit(g_quit);
 }
 
-int		exec_job(char **job_tab, int i, t_pipe p, char *command, char **command_tab)
+int		exec_job(char **job_tab, int i, t_pipe p)
 {
 	if ((p.child[i] = fork()) < 0)
 		exit(0);
@@ -115,25 +111,14 @@ int		exec_job(char **job_tab, int i, t_pipe p, char *command, char **command_tab
 	{
 		dup2(p.pipefd[1], 1);
 		close_fd(p.pipefd, p.nb_pipe * 2);
-	free(p.child);
-	free(p.pipefd);
-	free_tab(job_tab);
-	free_tab(g_env);
-	free_tab(command_tab);
-	free(command);
 		find_job(job_tab[0]);
+		wait(NULL);
 		exit(g_quit);
 	}
 	if (p.child[p.nb_job - 1] == 0)
 	{
 		dup2(p.pipefd[p.nb_fd - 2], 0);
 		close_fd(p.pipefd, p.nb_pipe * 2);
-	free(p.child);
-	free(p.pipefd);
-	free_tab(job_tab);
-	free_tab(g_env);
-	free_tab(command_tab);
-	free(command);
 		find_job(job_tab[p.nb_job - 1]);
 		exit(g_quit);
 	}
@@ -153,7 +138,7 @@ int		init_pipe(char *command, t_pipe *p, char ***job_tab)
 	return (SUCCESS);
 }
 
-int		pipeline(char *command, char **command_tab)
+int		pipeline(char *command)
 {
 	int		i;
 	t_pipe	p;
@@ -161,17 +146,18 @@ int		pipeline(char *command, char **command_tab)
 	int 	stat;
 
 	i = 0;
+	g_pipe = 1;
 	init_pipe(command, &p, &job_tab);
 	while (i < p.nb_job)
 	{
-		exec_job(job_tab, i, p, command, command_tab);
+		exec_job(job_tab, i, p);
 		i++;
 	}
 	close_fd(p.pipefd, p.nb_pipe * 2);
 	i = 0;
 	while (i < p.nb_job)
 	{
-		waitpid(-1, &stat, 0);
+		waitpid(p.child[i], &stat, 0);
 		if (WIFEXITED(stat))
 			g_quit = WEXITSTATUS(stat);
 		i++;

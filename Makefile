@@ -37,6 +37,7 @@ SRCS_ERR		=	srcs/error_handling/parsing_error.c \
 					srcs/error_handling/ctrl_error.c
 SRCS_REDIR		=	srcs/redirections/redirect.c	\
 					srcs/redirections/redirect_inf.c	\
+					srcs/redirections/double_redir.c	\
 					srcs/redirections/pipeline.c
 
 

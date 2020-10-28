@@ -19,12 +19,7 @@ int		ft_pwd(char *line, int type)
 	int		i;
 
 	i = 0;
-	if (line != 0)
-	{
-		ft_putstr_fd("pwd: too many arguments\n", 2);
-		g_quit = 1;
-		return (1);
-	}
+	(void)line;
 	getcwd(cwd, sizeof(cwd));
 	(type == 1) ? ft_putstr_fd(cwd, 1) : 0;
 	if (type == 0)
@@ -32,7 +27,8 @@ int		ft_pwd(char *line, int type)
 		tab = ft_split(cwd, '/');
 		while (tab[i] != 0)
 			i++;
-		ft_putstr_fd(tab[i - 1], 1);
+		(i == 0) ? ft_putstr_fd("/", 1) : 0;
+		(i > 0) ? ft_putstr_fd(tab[i - 1], 1) : 0;
 		free_tab(tab);
 		return (2);
 	}
@@ -59,14 +55,13 @@ int		ft_cd(char **tab)
 	if (strcmp(tab[0], "cd") == 0)
 		i++;
 	if (tab[i] == 0)
-		return (chdir(ft_search("HOME")));
+		return (chdir(ft_search("HOME")) + 2);
 	else if (tab[i + 1] != 0)
 	{
 		ft_putstr_fd("cd: string not in pwd: ", 2);
 		ft_putstr_fd(tab[1], 2);
 		ft_putchar_fd('\n', 2);
-		g_quit = 1;
-		return(1);
+		return (g_quit = 1);
 	}
 	while (tab[i][ft_strlen(tab[i]) - 1] == '/')
 		tab[i][ft_strlen(tab[i]) - 1] = '\0';
