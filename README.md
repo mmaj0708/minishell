@@ -3,7 +3,6 @@
 
 ## Features ⤵️
 - builtins : echo with option -n, cd, pwd, export, unset, env, exit
-- redirections > >> <
 - environment variables ($followed by characters) expands to their values
 - ctrl-C, ctrl-D and ctrl -\
 - ' inhibit all interpretation of a sequence of characters
